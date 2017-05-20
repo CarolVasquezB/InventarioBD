@@ -158,7 +158,6 @@ CREATE TABLE `factura` (
   `cod_factura` int(11) NOT NULL,
   `valor_factura` float NOT NULL,
   `fecha_factura` date NOT NULL,
-  `tipo_pago_factura` varchar(45) NOT NULL,
   `cod_cliente` int(11) NOT NULL,
   `cod_empleado` int(11) NOT NULL,
   `cod_abono` int(11) NOT NULL,
@@ -273,4 +272,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-05-20 17:17:14
+-- Dump completed on 2017-05-20 18:32:36
