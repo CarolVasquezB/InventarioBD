@@ -26,11 +26,8 @@ DROP TABLE IF EXISTS `abonos`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `abonos` (
   `cod_abono` int(11) NOT NULL,
-  `cod_factura` int(11) NOT NULL,
   `valor_abono` float NOT NULL,
-  PRIMARY KEY (`cod_abono`),
-  KEY `fk_cod_factura_idx` (`cod_factura`),
-  CONSTRAINT `fk_cod_factura` FOREIGN KEY (`cod_factura`) REFERENCES `factura` (`cod_factura`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  PRIMARY KEY (`cod_abono`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -276,4 +273,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-05-20 17:00:14
+-- Dump completed on 2017-05-20 17:17:14
