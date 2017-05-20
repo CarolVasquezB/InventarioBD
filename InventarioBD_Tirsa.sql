@@ -1,10 +1,8 @@
-CREATE DATABASE  IF NOT EXISTS `inventario` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `inventario`;
 -- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
 -- Host: localhost    Database: inventario
 -- ------------------------------------------------------
--- Server version	5.7.11-log
+-- Server version	5.7.13-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -118,7 +116,6 @@ CREATE TABLE `empleado` (
 
 LOCK TABLES `empleado` WRITE;
 /*!40000 ALTER TABLE `empleado` DISABLE KEYS */;
-INSERT INTO `empleado` VALUES (12345,'user','psswd');
 /*!40000 ALTER TABLE `empleado` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -194,7 +191,7 @@ CREATE TABLE `persona` (
   `nombres_persona` varchar(45) NOT NULL,
   `apellidos_persona` varchar(45) NOT NULL,
   `correo_persona` varchar(45) DEFAULT NULL,
-  `fecha_nac_persona` varchar(45) DEFAULT NULL,
+  `fecha_nac_persona` date DEFAULT NULL,
   PRIMARY KEY (`cod_persona`),
   UNIQUE KEY `correo_persona_UNIQUE` (`correo_persona`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12346 DEFAULT CHARSET=utf8;
@@ -206,7 +203,6 @@ CREATE TABLE `persona` (
 
 LOCK TABLES `persona` WRITE;
 /*!40000 ALTER TABLE `persona` DISABLE KEYS */;
-INSERT INTO `persona` VALUES (12345,54321,'david','nn','jjj@gmail.com','27 junio');
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -226,6 +222,7 @@ CREATE TABLE `producto` (
   `cantidad` int(11) NOT NULL,
   `cod_categoria` int(11) NOT NULL,
   `valor_venta_min` float NOT NULL,
+  `fecha_compra` date NOT NULL,
   PRIMARY KEY (`cod_producto`),
   KEY `cod_categoria_idx` (`cod_categoria`),
   CONSTRAINT `cod_categoria` FOREIGN KEY (`cod_categoria`) REFERENCES `categoria` (`cod_categoria`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -273,4 +270,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-05-18 18:55:47
+-- Dump completed on 2017-05-20 16:39:33
