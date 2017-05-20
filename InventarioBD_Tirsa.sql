@@ -78,6 +78,7 @@ CREATE TABLE `detalle_factura` (
   `cod_det_factura` int(11) NOT NULL AUTO_INCREMENT,
   `cod_factura` int(11) NOT NULL,
   `cod_producto` int(11) NOT NULL,
+  `cantidad_producto` int(11) NOT NULL,
   PRIMARY KEY (`cod_det_factura`),
   KEY `cod_factura_idx` (`cod_factura`),
   KEY `cod_producto_idx` (`cod_producto`),
@@ -163,9 +164,12 @@ CREATE TABLE `factura` (
   `tipo_pago_factura` varchar(45) NOT NULL,
   `cod_cliente` int(11) NOT NULL,
   `cod_empleado` int(11) NOT NULL,
+  `cod_abono` int(11) NOT NULL,
   PRIMARY KEY (`cod_factura`),
   KEY `cod_empleado_idx` (`cod_empleado`),
   KEY `cod_cliente_idx` (`cod_cliente`),
+  KEY `cod_abono_idx` (`cod_abono`),
+  CONSTRAINT `cod_abono` FOREIGN KEY (`cod_abono`) REFERENCES `abonos` (`cod_abono`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `cod_cliente` FOREIGN KEY (`cod_cliente`) REFERENCES `persona` (`cod_persona`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `cod_empleado` FOREIGN KEY (`cod_empleado`) REFERENCES `empleado` (`cod_empleado_persona`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -221,7 +225,7 @@ CREATE TABLE `producto` (
   `descr_producto` varchar(45) DEFAULT NULL,
   `valor_compra` float NOT NULL,
   `valor_venta_max` float NOT NULL,
-  `cantidad` int(11) NOT NULL,
+  `stock_producto` int(11) NOT NULL,
   `cod_categoria` int(11) NOT NULL,
   `valor_venta_min` float NOT NULL,
   `fecha_compra` date NOT NULL,
@@ -272,4 +276,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-05-20 16:47:23
+-- Dump completed on 2017-05-20 17:00:14
