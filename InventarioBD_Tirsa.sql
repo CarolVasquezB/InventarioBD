@@ -79,6 +79,7 @@ CREATE TABLE `detalle_factura` (
   `cod_factura` int(11) NOT NULL,
   `cod_producto` int(11) NOT NULL,
   `cantidad_producto` int(11) NOT NULL,
+  `valor_producto` float NOT NULL,
   PRIMARY KEY (`cod_det_factura`),
   KEY `cod_factura_idx` (`cod_factura`),
   KEY `cod_producto_idx` (`cod_producto`),
@@ -277,4 +278,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-03 17:46:36
+-- Dump completed on 2017-06-03 18:11:20
