@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `inventario` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `inventario`;
--- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 5.6.23, for Win32 (x86)
 --
 -- Host: localhost    Database: inventario
 -- ------------------------------------------------------
--- Server version	5.7.13-log
+-- Server version	5.6.24-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -27,7 +27,10 @@ DROP TABLE IF EXISTS `abonos`;
 CREATE TABLE `abonos` (
   `cod_abono` int(11) NOT NULL,
   `valor_abono` float NOT NULL,
-  PRIMARY KEY (`cod_abono`)
+  `cod_factura` int(11) NOT NULL,
+  PRIMARY KEY (`cod_abono`),
+  KEY `fk_cod_factura_idx` (`cod_factura`),
+  CONSTRAINT `fk_cod_factura` FOREIGN KEY (`cod_factura`) REFERENCES `factura` (`cod_factura`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -107,7 +110,7 @@ CREATE TABLE `empleado` (
   PRIMARY KEY (`cod_empleado_persona`),
   UNIQUE KEY `login_empleado_UNIQUE` (`login_empleado`),
   CONSTRAINT `cod_empleado_person` FOREIGN KEY (`cod_empleado_persona`) REFERENCES `persona` (`cod_persona`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=12346 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -116,6 +119,7 @@ CREATE TABLE `empleado` (
 
 LOCK TABLES `empleado` WRITE;
 /*!40000 ALTER TABLE `empleado` DISABLE KEYS */;
+INSERT INTO `empleado` VALUES (1,'CarolVasquezB','carol123');
 /*!40000 ALTER TABLE `empleado` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -135,7 +139,7 @@ CREATE TABLE `empleado_rol` (
   KEY `cod_empleado_persona_idx` (`cod_empleado_persona`),
   CONSTRAINT `cod_empleado_persona` FOREIGN KEY (`cod_empleado_persona`) REFERENCES `empleado` (`cod_empleado_persona`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `cod_rol` FOREIGN KEY (`cod_rol`) REFERENCES `rol` (`cod_rol`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -144,6 +148,7 @@ CREATE TABLE `empleado_rol` (
 
 LOCK TABLES `empleado_rol` WRITE;
 /*!40000 ALTER TABLE `empleado_rol` DISABLE KEYS */;
+INSERT INTO `empleado_rol` VALUES (1,1,1);
 /*!40000 ALTER TABLE `empleado_rol` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -160,12 +165,9 @@ CREATE TABLE `factura` (
   `fecha_factura` date NOT NULL,
   `cod_cliente` int(11) NOT NULL,
   `cod_empleado` int(11) NOT NULL,
-  `cod_abono` int(11) NOT NULL,
   PRIMARY KEY (`cod_factura`),
   KEY `cod_empleado_idx` (`cod_empleado`),
   KEY `cod_cliente_idx` (`cod_cliente`),
-  KEY `cod_abono_idx` (`cod_abono`),
-  CONSTRAINT `cod_abono` FOREIGN KEY (`cod_abono`) REFERENCES `abonos` (`cod_abono`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `cod_cliente` FOREIGN KEY (`cod_cliente`) REFERENCES `persona` (`cod_persona`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `cod_empleado` FOREIGN KEY (`cod_empleado`) REFERENCES `empleado` (`cod_empleado_persona`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -196,7 +198,7 @@ CREATE TABLE `persona` (
   `fecha_nac_persona` date DEFAULT NULL,
   PRIMARY KEY (`cod_persona`),
   UNIQUE KEY `correo_persona_UNIQUE` (`correo_persona`)
-) ENGINE=InnoDB AUTO_INCREMENT=12346 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -205,6 +207,7 @@ CREATE TABLE `persona` (
 
 LOCK TABLES `persona` WRITE;
 /*!40000 ALTER TABLE `persona` DISABLE KEYS */;
+INSERT INTO `persona` VALUES (1,1061785255,'Carol Elizabeth','Vasquez Burbano','carolvasquezb@gmail.com','1995-10-19'),(12,1061785255,'prueba','nn','rrr@g.com','1995-10-02');
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -237,6 +240,7 @@ CREATE TABLE `producto` (
 
 LOCK TABLES `producto` WRITE;
 /*!40000 ALTER TABLE `producto` DISABLE KEYS */;
+INSERT INTO `producto` VALUES (1,'Blusa',NULL,25000,35000,10,2,10000,'2017-06-02'),(123,'pulsera','material plata tejido nuevo',80000,100000,5,1,90000,'2017-05-20'),(432,'reloj','prueba descripcion',150000,170000,10,1,160000,'2017-05-20');
 /*!40000 ALTER TABLE `producto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -260,6 +264,7 @@ CREATE TABLE `rol` (
 
 LOCK TABLES `rol` WRITE;
 /*!40000 ALTER TABLE `rol` DISABLE KEYS */;
+INSERT INTO `rol` VALUES (1,'Administrador'),(2,'Vendedor');
 /*!40000 ALTER TABLE `rol` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -272,4 +277,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-05-20 18:32:36
+-- Dump completed on 2017-06-03 17:46:36
