@@ -110,7 +110,6 @@ CREATE TABLE `empleado` (
   `cod_empleado_persona` int(11) NOT NULL AUTO_INCREMENT,
   `login_empleado` varchar(45) NOT NULL,
   `password_empleado` varchar(45) NOT NULL,
-  `num_accesos` int(11) DEFAULT NULL,
   `bloqueado` char(1) DEFAULT NULL,
   PRIMARY KEY (`cod_empleado_persona`),
   UNIQUE KEY `login_empleado_UNIQUE` (`login_empleado`),
@@ -124,29 +123,9 @@ CREATE TABLE `empleado` (
 
 LOCK TABLES `empleado` WRITE;
 /*!40000 ALTER TABLE `empleado` DISABLE KEYS */;
-INSERT INTO `empleado` VALUES (1,'CarolVasquezB','carol123',2,'F'),(12,'admin','12345678',1,'F'),(111,'carol','111',2,'F');
+INSERT INTO `empleado` VALUES (1,'CarolVasquezB','carol123','F'),(12,'admin','12345678','F'),(111,'carol','111','T');
 /*!40000 ALTER TABLE `empleado` ENABLE KEYS */;
 UNLOCK TABLES;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `inventario`.`empleado_BEFORE_UPDATE` BEFORE UPDATE ON `empleado` FOR EACH ROW
-BEGIN
-		if old.num_accesos = 2 then
-			update empleado set bloqueado='T' ;
-		end if;
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `empleado_rol`
@@ -207,6 +186,59 @@ LOCK TABLES `factura` WRITE;
 INSERT INTO `factura` VALUES (1,360000,'2017-06-01',1,1),(2,410000,'2017-06-02',1,1),(3,640000,'2017-06-01',1,1),(4,160000,'2017-06-06',1,1),(5,160000,'2017-06-06',1,1),(6,0,'2017-06-06',1,1),(7,160000,'2017-06-01',1,1),(8,170000,'2017-06-01',1,1),(9,160000,'2017-06-01',1,1),(10,20000,'2017-06-01',1,1),(11,10000,'2017-06-02',1,1),(12,20000,'2017-06-02',1,1),(13,55000,'2017-06-02',2,1),(14,110000,'2017-06-09',2,1),(15,55000,'2017-06-10',2,1);
 /*!40000 ALTER TABLE `factura` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `historial_accesos`
+--
+
+DROP TABLE IF EXISTS `historial_accesos`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `historial_accesos` (
+  `cod_historial` int(11) NOT NULL AUTO_INCREMENT,
+  `num_intentos` int(11) DEFAULT NULL,
+  `cod_empleado` int(11) DEFAULT NULL,
+  PRIMARY KEY (`cod_historial`),
+  KEY `fk_cod_emplado_idx` (`cod_empleado`),
+  CONSTRAINT `fk_cod_emplado` FOREIGN KEY (`cod_empleado`) REFERENCES `empleado` (`cod_empleado_persona`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `historial_accesos`
+--
+
+LOCK TABLES `historial_accesos` WRITE;
+/*!40000 ALTER TABLE `historial_accesos` DISABLE KEYS */;
+INSERT INTO `historial_accesos` VALUES (20,1,111),(21,1,111),(22,1,111);
+/*!40000 ALTER TABLE `historial_accesos` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `inventario`.`historial_accesos_BEFORE_INSERT` BEFORE INSERT ON `historial_accesos` FOR EACH ROW
+BEGIN
+
+	if  (select t1.cod_empleado from 
+	(select cod_empleado, sum(num_intentos) intentos from 
+	historial_accesos group by cod_empleado)t1 where t1.intentos=2) is not null then
+		update empleado set bloqueado='T' where empleado.cod_empleado_persona=(select t1.cod_empleado 
+        from 
+		(select cod_empleado, sum(num_intentos) intentos from 
+		historial_accesos group by cod_empleado)t1 where t1.intentos=2);
+	end if;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `persona`
@@ -367,4 +399,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-07 14:25:40
+-- Dump completed on 2017-06-07 21:53:44
